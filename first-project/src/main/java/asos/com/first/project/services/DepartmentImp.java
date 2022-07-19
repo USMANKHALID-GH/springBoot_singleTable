@@ -1,6 +1,7 @@
 package asos.com.first.project.services;
 
 import asos.com.first.project.Entity.Department;
+import asos.com.first.project.exceptions.DepartmentNotFound;
 import asos.com.first.project.repo.DepartmentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +27,12 @@ public class DepartmentImp  implements DepartmentService{
     }
 
     @Override
-    public Department getById(Long id) {
-        return departmentRepo.findById(id).get();
+    public Department getById(Long id) throws DepartmentNotFound {
+        Optional<Department> department=departmentRepo.findById(id);
+        if(!department.isPresent()){
+            throw  new DepartmentNotFound("Department Id not Found");
+        }
+        return department.get();
     }
 
     @Override
